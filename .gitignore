@@ -1,2 +1,4 @@
 dockerpw.txt
 node_modules/
+.env
+.env.test
