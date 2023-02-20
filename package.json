@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "pretest": "node scripts/create-db.js test",
+    "posttest": "node scripts/drop-db.js",
+    "test": "mocha tests/**/*.js --exit --recursive --timeout 60000 --file ./tests/test-setup.js",
+    "prestart": "node scripts/create-db.js",
     "start": "nodemon -r dotenv/config index.js"
   },
   "repository": {
@@ -19,8 +22,11 @@
   },
   "homepage": "https://github.com/tsv-stacks/music-library#readme",
   "devDependencies": {
+    "chai": "^4.3.7",
     "eslint": "^8.34.0",
-    "nodemon": "^2.0.20"
+    "mocha": "^10.2.0",
+    "nodemon": "^2.0.20",
+    "supertest": "^6.3.3"
   },
   "dependencies": {
     "dotenv": "^16.0.3",
