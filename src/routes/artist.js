@@ -1,8 +1,6 @@
 const app = require('../app');
+const { artistController } = require('../controllers/artist')
 
 app.post('/artists', (req, res) => {
-  res.status(201).send({
-    name: 'Tame Impala',
-    genre: 'indie',
-  });
+  artistController()
 });
