@@ -10,11 +10,9 @@ const artistController = async (req, res) => {
       "INSERT INTO Artists(name, genre) VALUES($1, $2) RETURNING *",
       [name, genre]
     )
-    console.log(artist);
     res.status(201).send(artist);
   } catch (error) {
-    console.log(error);
-    res.status(500).send(error);
+    res.status(500).send(error.message);
   }
 };
 
