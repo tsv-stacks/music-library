@@ -10,7 +10,7 @@ describe('Read Artists', () => {
         const responses = await Promise.all([
             db.query('INSERT INTO Artists (name, genre) VALUES( $1, $2) RETURNING *', [
                 'Tame Impala',
-                'rock',
+                'indie',
             ]),
             db.query('INSERT INTO Artists (name, genre) VALUES( $1, $2) RETURNING *', [
                 'Kylie Minogue',
