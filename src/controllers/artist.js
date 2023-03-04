@@ -32,6 +32,9 @@ const findArtist = async (req, res) => {
     const { rows } = await db.query(
       `SELECT * FROM Artists WHERE id=${artistID}`
     )
+    if (!rows[0]) {
+      return res.status(404).send({ message: `artist ${artistID} does not exist` })
+    }
     res.status(200).send(rows[0])
   } catch (error) {
     res.status(500).send(error);
