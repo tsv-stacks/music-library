@@ -3,9 +3,7 @@ const db = require('../db/index')
 const artistController = async (req, res) => {
   try {
     const { name, genre } = req.body
-    // const name = 'Tame Impala'
-    // const genre = 'indie'
-    console.log(name, genre);
+    // console.log(name, genre);
     const { rows: [artist] } = await db.query(
       "INSERT INTO Artists(name, genre) VALUES($1, $2) RETURNING *",
       [name, genre]
@@ -21,7 +19,6 @@ const readArtist = async (req, res) => {
     const { rows } = await db.query(
       "SELECT * FROM Artists;"
     )
-    console.log(rows);
     res.status(200).send(rows)
   } catch (error) {
     res.status(500).send(error);
@@ -29,4 +26,16 @@ const readArtist = async (req, res) => {
 
 }
 
-module.exports = { artistController, readArtist }
+const findArtist = async (req, res) => {
+  try {
+    const artistID = await req.params.id
+    const { rows } = await db.query(
+      `SELECT * FROM Artists WHERE id=${artistID}`
+    )
+    res.status(200).send(rows[0])
+  } catch (error) {
+    res.status(500).send(error);
+  }
+}
+
+module.exports = { artistController, readArtist, findArtist }
