@@ -55,7 +55,14 @@ const updateArtist = async (req, res) => {
   } catch (error) {
     res.status(500).send(error);
   }
-
 }
 
-module.exports = { artistController, readArtist, findArtist, updateArtist }
+const patchArtist = async (req, res) => {
+  const artistID = await req.params.id;
+  const { name, genre } = req.body
+  if (!name || !genre) {
+    res.status(500).send('')
+  }
+}
+
+module.exports = { artistController, readArtist, findArtist, updateArtist, patchArtist }
