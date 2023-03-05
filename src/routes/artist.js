@@ -7,6 +7,6 @@ router.post('/artists', artistController)
 router.get('/artists', readArtist)
 router.get('/artists/:id', findArtist)
 router.put('/artists/:id', updateArtist)
-router.patch('artists/:id', patchArtist)
+router.patch('/artists/:id', patchArtist)
 
 module.exports = router
