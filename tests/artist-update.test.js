@@ -8,7 +8,7 @@ describe('Update Artist', () => {
     beforeEach(async () => {
         const { rows } = await db.query('INSERT INTO Artists (name, genre) VALUES( $1, $2) RETURNING *', [
             'Tame Impala',
-            'rock',
+            'indie',
         ])
 
         artist = rows[0]
@@ -22,5 +22,13 @@ describe('Update Artist', () => {
 
             expect(body).to.deep.equal({ id: artist.id, name: 'something different', genre: 'different genre' })
         })
+
+        it('returns a 404 if the artist does not exist', async () => {
+            const { status, body } = await request(app).put('/artists/999999999').send({ name: 'something different', genre: 'different genre' })
+
+            expect(status).to.equal(404)
+            expect(body.message).to.equal('artist 999999999 does not exist')
+        })
+
     })
 })
