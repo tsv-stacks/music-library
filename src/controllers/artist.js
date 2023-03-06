@@ -89,4 +89,20 @@ const patchArtist = async (req, res) => {
   }
 }
 
-module.exports = { artistController, readArtist, findArtist, updateArtist, patchArtist }
+const deleteArtist = async (req, res) => {
+  try {
+    const artistID = await req.params.id;
+    const { rows } = await db.query(
+      `DELETE FROM Artists WHERE id=$1 RETURNING *;`,
+      [artistID]
+    )
+    if (!rows[0]) {
+      return res.status(404).send({ message: `artist ${artistID} does not exist` })
+    }
+    res.status(200).send(rows[0])
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+}
+
+module.exports = { artistController, readArtist, findArtist, updateArtist, patchArtist, deleteArtist }
