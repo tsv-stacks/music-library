@@ -33,11 +33,11 @@ describe('create album', () => {
                 } = await db.query(`SELECT * FROM Albums WHERE id = ${body.id}`);
                 expect(artistData.name).to.equal('The Slow Rush');
                 expect(artistData.year).to.equal(2020);
-                expect(artistData.artistID).to.equal(artist.id)
+                expect(artistData.artistid).to.equal(artist.id)
             });
 
             it('returns a 404 if the artist does not exist', async () => {
-                const { status, body } = await request(app).delete('/artists/999999999/albums').send()
+                const { status, body } = await request(app).post('/artists/999999999/albums').send()
 
                 expect(status).to.equal(404)
                 expect(body.message).to.equal('artist 999999999 does not exist')
