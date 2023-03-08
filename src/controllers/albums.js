@@ -13,9 +13,27 @@ const createAlbum = async (req, res) => {
             res.status(201).send(newAlbum[0])
         }
     } catch (error) {
-        console.log(error);
         res.status(500).send(error.message)
     }
 }
 
-module.exports = { createAlbum }
+const getAlbum = async (req, res) => {
+    try {
+        const { rows: albums } = await db.query('SELECT * FROM Albums')
+        res.status(200).send(albums)
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+}
+
+const findAlbum = async (req, res) => {
+    try {
+        const albumID = req.params.id
+        const { rows: album } = await db.query('SELECT * FROM Albums WHERE id=$1', [albumID])
+        res.status(200).send(album)
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+}
+
+module.exports = { createAlbum, getAlbum, findAlbum }

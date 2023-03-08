@@ -10,8 +10,10 @@ router.put('/artists/:id', updateArtist)
 router.patch('/artists/:id', patchArtist)
 router.delete('/artists/:id', deleteArtist)
 
-const { createAlbum } = require('../controllers/albums')
+const { createAlbum, getAlbum, findAlbum } = require('../controllers/albums')
 
 router.post('/artists/:id/albums', createAlbum)
+router.get('/albums', getAlbum)
+router.get('/albums/:id', findAlbum)
 
 module.exports = router
