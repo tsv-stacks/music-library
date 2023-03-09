@@ -30,10 +30,21 @@ const findAlbum = async (req, res) => {
     try {
         const albumID = req.params.id
         const { rows: album } = await db.query('SELECT * FROM Albums WHERE id=$1', [albumID])
-        res.status(200).send(album)
+        if (!album[0]) {
+            res.status(404).send({ message: `album ${albumID} does not exist` })
+        }
+        res.status(200).send(album[0])
     } catch (error) {
         res.status(500).send(error.message)
     }
 }
 
-module.exports = { createAlbum, getAlbum, findAlbum }
+const updateAlbum = async (req, res) => {
+
+}
+
+const patchAlbum = async (req, res) => {
+
+}
+
+module.exports = { createAlbum, getAlbum, findAlbum, updateAlbum, patchAlbum }
