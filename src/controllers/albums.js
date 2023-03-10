@@ -55,8 +55,24 @@ const updateAlbum = async (req, res) => {
 
 const patchAlbum = async (req, res) => {
     try {
-        res.status(200).send('test')
+        const { name, year } = req.body
+        const albumID = req.params.id
+        const { rows: checkAlbum } = await db.query('SELECT * FROM Albums WHERE id=$1', [albumID])
+
+        if (!checkAlbum[0]) {
+            res.status(404).send({ message: `album ${albumID} does not exist` })
+        } else if (name && year) {
+            const { rows } = await db.query('UPDATE Albums SET name=$1, year=$2 WHERE id=$3 RETURNING *;', [name, year, albumID])
+            res.status(200).send(rows[0])
+        } else if (!name && year) {
+            const { rows } = await db.query('UPDATE Albums SET year=$1 WHERE id=$2 RETURNING *;', [year, albumID])
+            res.status(200).send(rows[0])
+        } else if (name && !year) {
+            const { rows } = await db.query('UPDATE Albums SET name=$1 WHERE id=$2 RETURNING *;', [name, albumID])
+            res.status(200).send(rows[0])
+        }
     } catch (error) {
+        console.log(error);
         res.status(500).send(error.message)
     }
 }

@@ -48,36 +48,36 @@ describe('Update Albums', () => {
 
     })
 
-    describe('PATCH /artists/{id}', () => {
-        xit('updates the artist and returns the updated record', async () => {
-            const { status, body } = await request(app).patch(`/artists/${artist.id}`).send({ name: 'something different', genre: 'rock' })
+    describe('PATCH /albums/{id}', () => {
+        it('updates the artist and returns the updated record', async () => {
+            const { status, body } = await request(app).patch(`/albums/${albums[0].id}`).send({ name: 'something different', year: 2023 })
 
             expect(status).to.equal(200)
 
-            expect(body).to.deep.equal({ id: artist.id, name: 'something different', genre: 'rock' })
+            expect(body).to.deep.equal({ artistid: artist.id, id: albums[0].id, name: 'something different', year: 2023 })
         })
 
-        xit('returns a 404 if the artist does not exist', async () => {
-            const { status, body } = await request(app).patch('/artists/999999999').send({ name: 'something different', genre: 'rock' })
+        it('updates the album year and returns the updated record', async () => {
+            const { status, body } = await request(app).patch(`/albums/${albums[0].id}`).send({ year: 2020 })
+
+            expect(status).to.equal(200)
+
+            expect(body).to.deep.equal({ artistid: artist.id, id: albums[0].id, year: 2020, name: "The Slow Rush" })
+        })
+
+        it('returns a 404 if the album does not exist', async () => {
+            const { status, body } = await request(app).patch('/albums/999999999').send({ name: 'something different', genre: 'rock' })
 
             expect(status).to.equal(404)
-            expect(body.message).to.equal('artist 999999999 does not exist')
+            expect(body.message).to.equal('album 999999999 does not exist')
         })
 
-        xit('updates the artist and returns the updated record', async () => {
-            const { status, body } = await request(app).patch(`/artists/${artist.id}`).send({ genre: 'rock' })
+        it('updates the album name and returns the updated record', async () => {
+            const { status, body } = await request(app).patch(`/albums/${albums[0].id}`).send({ name: 'something different' })
 
             expect(status).to.equal(200)
 
-            expect(body).to.deep.equal({ id: artist.id, name: 'Tame Impala', genre: 'rock' })
-        })
-
-        xit('updates the artist and returns the updated record', async () => {
-            const { status, body } = await request(app).patch(`/artists/${artist.id}`).send({ name: 'Broken Bells' })
-
-            expect(status).to.equal(200)
-
-            expect(body).to.deep.equal({ id: artist.id, name: 'Broken Bells', genre: 'indie' })
+            expect(body).to.deep.equal({ artistid: artist.id, id: albums[0].id, year: 2020, name: "something different" })
         })
     })
 })
