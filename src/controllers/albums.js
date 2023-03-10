@@ -77,4 +77,13 @@ const patchAlbum = async (req, res) => {
     }
 }
 
-module.exports = { createAlbum, getAlbum, findAlbum, updateAlbum, patchAlbum }
+const deleteAlbum = (req, res) => {
+    try {
+        const albumID = req.params.id
+
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}
+
+module.exports = { createAlbum, getAlbum, findAlbum, updateAlbum, patchAlbum, deleteAlbum }
