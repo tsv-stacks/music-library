@@ -40,11 +40,26 @@ const findAlbum = async (req, res) => {
 }
 
 const updateAlbum = async (req, res) => {
-
+    try {
+        const albumID = req.params.id
+        const { name, year } = req.body
+        const { rows } = await db.query('UPDATE Albums SET name=$1, year=$2 WHERE id=$3 RETURNING *;', [name, year, albumID])
+        console.log(rows, rows[0], name, year, albumID);
+        if (!rows[0]) {
+            res.status(404).send({ message: `album ${albumID} does not exist` })
+        }
+        res.status(200).send(rows[0])
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
 }
 
 const patchAlbum = async (req, res) => {
-
+    try {
+        res.status(200).send('test')
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
 }
 
 module.exports = { createAlbum, getAlbum, findAlbum, updateAlbum, patchAlbum }

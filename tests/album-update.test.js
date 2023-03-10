@@ -32,11 +32,11 @@ describe('Update Albums', () => {
 
     describe('PUT /albums/{id}', () => {
         it('replaces the album and returns the updated record', async () => {
-            const { status, body } = await request(app).put(`/albums/${artist.id}`).send({ name: 'something different', year: 2023 })
+            const { status, body } = await request(app).put(`/albums/${albums[0].id}`).send({ name: 'something different', year: 2023 })
 
             expect(status).to.equal(200)
 
-            expect(body).to.deep.equal({ artistID: artist.id, name: 'something different', year: 2023 })
+            expect(body).to.deep.equal({ artistid: artist.id, id: albums[0].id, name: 'something different', year: 2023 })
         })
 
         it('returns a 404 if the artist does not exist', async () => {
