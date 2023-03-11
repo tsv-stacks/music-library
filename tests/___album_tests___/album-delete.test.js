@@ -32,11 +32,11 @@ describe('Delete Albums', () => {
 
     describe('DELETE /albums/{id}', () => {
         it('deletes the album and returns the deleted data', async () => {
-            const { status, body } = await request(app).delete(`/albums/${albums[0].id}}`).send()
+            const { status, body } = await request(app).delete(`/albums/${albums[0].id}`).send()
 
             expect(status).to.equal(200)
 
-            expect(body).to.deep.equal({ id: artist.id, name: 'Tame Impala', genre: 'indie' })
+            expect(body).to.deep.equal({ artistid: artist.id, id: albums[0].id, name: 'The Slow Rush', year: 2020 })
         })
 
         it('returns a 404 if the album does not exist', async () => {

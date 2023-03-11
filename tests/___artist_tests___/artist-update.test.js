@@ -48,7 +48,7 @@ describe('Update Artist', () => {
             expect(body.message).to.equal('artist 999999999 does not exist')
         })
 
-        it('updates the artist and returns the updated record', async () => {
+        it('updates the artist w/o name and returns the updated record', async () => {
             const { status, body } = await request(app).patch(`/artists/${artist.id}`).send({ genre: 'rock' })
 
             expect(status).to.equal(200)
@@ -56,7 +56,7 @@ describe('Update Artist', () => {
             expect(body).to.deep.equal({ id: artist.id, name: 'Tame Impala', genre: 'rock' })
         })
 
-        it('updates the artist and returns the updated record', async () => {
+        it('updates the artist w/o genre and returns the updated record', async () => {
             const { status, body } = await request(app).patch(`/artists/${artist.id}`).send({ name: 'Broken Bells' })
 
             expect(status).to.equal(200)
