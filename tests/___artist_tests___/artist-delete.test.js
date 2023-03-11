@@ -1,4 +1,3 @@
-// tests/artist-delete.js
 const { expect } = require('chai')
 const request = require('supertest')
 const db = require('../../src/db')

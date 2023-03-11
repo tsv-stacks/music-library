@@ -3,7 +3,6 @@ const db = require('../db/index')
 const artistController = async (req, res) => {
   try {
     const { name, genre } = req.body
-    // console.log(name, genre);
     const { rows: [artist] } = await db.query(
       "INSERT INTO Artists(name, genre) VALUES($1, $2) RETURNING *",
       [name, genre]
