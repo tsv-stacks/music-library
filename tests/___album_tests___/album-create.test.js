@@ -7,8 +7,6 @@ describe('create album', () => {
   describe('/artists/:id/albums', () => {
     let artist;
     beforeEach(async () => {
-      console.log('beforeEach hook executed successfully');
-
       const { rows } = await db.query(
         'INSERT INTO Artists (name, genre) VALUES( $1, $2) RETURNING *',
         ['Tame Impala', 'indie']
