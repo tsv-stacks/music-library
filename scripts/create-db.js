@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const { Client } = require('pg');
 const path = require('path');
 

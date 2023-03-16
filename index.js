@@ -1,5 +1,4 @@
 const app = require('./src/app');
-require('dotenv').config();
 
 const APP_PORT = process.env.PORT || 4000;
 
