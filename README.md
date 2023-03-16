@@ -1,6 +1,6 @@
 # Music Library API
 
-This is a Node.js Express API for managing artists and albums data. It provides HTTP endpoints for creating, reading, updating, and deleting artists and albums. The API uses the HTTP methods:
+This is a Node.js Express API for managing artists and albums data. It provides HTTP endpoints for creating, reading, updating, and deleting artists and albums from a SQL database using postgreSQL. The API uses the HTTP methods:
 
 - POST for creating new artists and albums
 - GET for retrieving artists and albums data
@@ -63,6 +63,55 @@ npm run start
 | PUT    | /albums/:id         | Replaces a specific album                 |
 | PATCH  | /albums/:id         | Updates a specific album                  |
 | DELETE | /albums/:id         | Deletes a specific album                  |
+
+## Database
+
+This code defines two PostgreSQL database tables: `Artists` and `Albums`.
+
+The Artists table has three columns:
+
+- `id`: a unique serial primary key
+- `name` a required string field for the artist's name
+- `genre` a required string field for the artist's music genre
+
+To create an artist, you must submit a JSON object in request body that includes the `name` and `genre` fields:
+
+```json
+{
+  "name": "Tame Impala",
+  "genre": "indie"
+}
+```
+
+The Albums table has four columns:
+
+- `id`: a unique serial primary key
+- `name`: a required string field for the album's name
+- `year`: an integer field for the year the album was released
+- `artistID`: a required integer field that references the id column in the Artists table
+
+To create an album you will first need to create the artist and then you can submit a JSON object in the request body that includes the `name` and `year` fields.
+
+```json
+{
+  "name": "The Slow Rush",
+  "year": 2020
+}
+```
+
+## Testing
+
+To run the mocha tests you will need to set up `.env.test` file in the root directory of this repository with the same parameters as the `.env` file but change `PGDATABASE`:
+
+```text
+PGDATABASE=music_library_test
+```
+
+Use the following command to run the tests:
+
+```bash
+npm run test
+```
 
 ## Dependencies
 
