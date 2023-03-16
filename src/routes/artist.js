@@ -10,27 +10,15 @@ const {
   deleteArtist,
 } = require('../controllers/artist');
 
-router.post('/artists', artistController);
-router.get('/artists', readArtist);
-router.get('/artists/:id', findArtist);
-router.put('/artists/:id', updateArtist);
-router.patch('/artists/:id', patchArtist);
-router.delete('/artists/:id', deleteArtist);
+const { createAlbum } = require('../controllers/albums');
 
-const {
-  createAlbum,
-  getAlbum,
-  findAlbum,
-  updateAlbum,
-  patchAlbum,
-  deleteAlbum,
-} = require('../controllers/albums');
+router.post('/', artistController);
+router.get('/', readArtist);
+router.get('/:id', findArtist);
+router.put('/:id', updateArtist);
+router.patch('/:id', patchArtist);
+router.delete('/:id', deleteArtist);
 
-router.post('/artists/:id/albums', createAlbum);
-router.get('/albums', getAlbum);
-router.get('/albums/:id', findAlbum);
-router.put('/albums/:id', updateAlbum);
-router.patch('/albums/:id', patchAlbum);
-router.delete('/albums/:id', deleteAlbum);
+router.post('/:id/albums', createAlbum);
 
 module.exports = router;

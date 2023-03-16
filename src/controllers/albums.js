@@ -127,7 +127,6 @@ const patchAlbum = async (req, res) => {
   }
 };
 
-
 const deleteAlbum = async (req, res) => {
   const albumID = req.params.id;
   try {

@@ -27,9 +27,9 @@ const readArtist = async (_, res) => {
 const findArtist = async (req, res) => {
   const artistID = req.params.id;
   try {
-    const { rows } = await db.query(
-      `SELECT * FROM Artists WHERE id=$1`, [artistID]
-    );
+    const { rows } = await db.query(`SELECT * FROM Artists WHERE id=$1`, [
+      artistID,
+    ]);
     if (!rows[0]) {
       return res
         .status(404)
@@ -70,7 +70,9 @@ const patchArtist = async (req, res) => {
     );
 
     if (!checkArtist[0]) {
-      return res.status(404).send({ message: `artist ${artistID} does not exist` });
+      return res
+        .status(404)
+        .send({ message: `artist ${artistID} does not exist` });
     } else if (!name && genre) {
       const { rows } = await db.query(
         `UPDATE Artists SET genre=$1 WHERE id=$2 RETURNING *`,
@@ -84,11 +86,9 @@ const patchArtist = async (req, res) => {
       );
       res.status(200).send(rows[0]);
     } else if (!name && !genre) {
-      res
-        .status(400)
-        .send({
-          message: `Syntax Error: artist: ${artistID}, name: ${name}, genre: ${genre} `,
-        });
+      res.status(400).send({
+        message: `Syntax Error: artist: ${artistID}, name: ${name}, genre: ${genre} `,
+      });
     } else if (name && genre && artistID) {
       const { rows } = await db.query(
         `UPDATE Artists SET name=$1, genre=$2 WHERE id=$3 RETURNING *;`,
