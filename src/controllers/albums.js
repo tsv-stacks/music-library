@@ -1,12 +1,11 @@
 const db = require('../db/index');
 
 const createAlbum = async (req, res) => {
+  const { name, year } = req.body;
+  const artistID = req.params.id;
   try {
-    const { name, year } = req.body;
-    const artistID = req.params.id;
     const { rows: artist } = await db.query(
-      `
-        SELECT * FROM Artists WHERE id=$1`,
+      `SELECT * FROM Artists WHERE id=$1`,
       [artistID]
     );
     if (!artist[0]) {
@@ -25,7 +24,7 @@ const createAlbum = async (req, res) => {
   }
 };
 
-const getAlbum = async (req, res) => {
+const getAlbum = async (_, res) => {
   try {
     const { rows: albums } = await db.query('SELECT * FROM Albums');
     res.status(200).send(albums);
@@ -35,8 +34,8 @@ const getAlbum = async (req, res) => {
 };
 
 const findAlbum = async (req, res) => {
+  const albumID = req.params.id;
   try {
-    const albumID = req.params.id;
     const { rows: album } = await db.query('SELECT * FROM Albums WHERE id=$1', [
       albumID,
     ]);
@@ -50,8 +49,8 @@ const findAlbum = async (req, res) => {
 };
 
 const updateAlbum = async (req, res) => {
+  const albumID = req.params.id;
   try {
-    const albumID = req.params.id;
     const { name, year } = req.body;
     const { rows } = await db.query(
       'UPDATE Albums SET name=$1, year=$2 WHERE id=$3 RETURNING *;',
@@ -67,9 +66,9 @@ const updateAlbum = async (req, res) => {
 };
 
 const patchAlbum = async (req, res) => {
+  const { name, year, artistID } = req.body;
+  const albumID = req.params.id;
   try {
-    const { name, year } = req.body;
-    const albumID = req.params.id;
     const { rows: checkAlbum } = await db.query(
       'SELECT * FROM Albums WHERE id=$1',
       [albumID]
@@ -77,24 +76,50 @@ const patchAlbum = async (req, res) => {
 
     if (!checkAlbum[0]) {
       res.status(404).send({ message: `album ${albumID} does not exist` });
-    } else if (name && year) {
+    } else if (name && year && artistID) {
+      const { rows } = await db.query(
+        'UPDATE Albums SET name=$1, year=$2, artistID=$3 WHERE id=$4 RETURNING *;',
+        [name, year, artistID, albumID]
+      );
+      res.status(200).send(rows[0]);
+    } else if (!name && year && artistID) {
+      const { rows } = await db.query(
+        'UPDATE Albums SET year=$1, artistID=$2 WHERE id=$3 RETURNING *;',
+        [year, artistID, albumID]
+      );
+      res.status(200).send(rows[0]);
+    } else if (name && !year && artistID) {
+      const { rows } = await db.query(
+        'UPDATE Albums SET name=$1, artistID=$2 WHERE id=$3 RETURNING *;',
+        [name, artistID, albumID]
+      );
+      res.status(200).send(rows[0]);
+    } else if (name && year && !artistID) {
       const { rows } = await db.query(
         'UPDATE Albums SET name=$1, year=$2 WHERE id=$3 RETURNING *;',
         [name, year, albumID]
       );
       res.status(200).send(rows[0]);
-    } else if (!name && year) {
+    } else if (!name && !year && artistID) {
       const { rows } = await db.query(
-        'UPDATE Albums SET year=$1 WHERE id=$2 RETURNING *;',
-        [year, albumID]
+        'UPDATE Albums SET artistID=$1 WHERE id=$2 RETURNING *;',
+        [artistID, albumID]
       );
       res.status(200).send(rows[0]);
-    } else if (name && !year) {
+    } else if (name && !year && !artistID) {
       const { rows } = await db.query(
         'UPDATE Albums SET name=$1 WHERE id=$2 RETURNING *;',
         [name, albumID]
       );
       res.status(200).send(rows[0]);
+    } else if (!name && year && !artistID) {
+      const { rows } = await db.query(
+        'UPDATE Albums SET year=$1 WHERE id=$2 RETURNING *;',
+        [year, albumID]
+      );
+      res.status(200).send(rows[0]);
+    } else {
+      res.status(400).send({ message: 'Invalid request' });
     }
   } catch (error) {
     console.log(error);
@@ -102,9 +127,10 @@ const patchAlbum = async (req, res) => {
   }
 };
 
+
 const deleteAlbum = async (req, res) => {
+  const albumID = req.params.id;
   try {
-    const albumID = req.params.id;
     const { rows: checkAlbum } = await db.query(
       'SELECT * FROM Albums WHERE id=$1',
       [albumID]
