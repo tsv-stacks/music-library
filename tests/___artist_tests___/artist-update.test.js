@@ -4,91 +4,91 @@ const db = require('../../src/db');
 const app = require('../../src/app');
 
 describe('Update Artist', () => {
-  let artist;
-  beforeEach(async () => {
-    const { rows } = await db.query(
-      'INSERT INTO Artists (name, genre) VALUES( $1, $2) RETURNING *',
-      ['Tame Impala', 'indie']
-    );
+    let artist;
+    beforeEach(async () => {
+        const { rows } = await db.query(
+            'INSERT INTO Artists (name, genre) VALUES( $1, $2) RETURNING *',
+            ['Tame Impala', 'indie']
+        );
 
-    artist = rows[0];
-  });
-
-  describe('PUT /artists/{id}', () => {
-    it('replaces the artist and returns the updated record', async () => {
-      const { status, body } = await request(app)
-        .put(`/artists/${artist.id}`)
-        .send({ name: 'something different', genre: 'different genre' });
-
-      expect(status).to.equal(200);
-
-      expect(body).to.deep.equal({
-        id: artist.id,
-        name: 'something different',
-        genre: 'different genre',
-      });
+        artist = rows[0];
     });
 
-    it('returns a 404 if the artist does not exist', async () => {
-      const { status, body } = await request(app)
-        .put('/artists/999999999')
-        .send({ name: 'something different', genre: 'different genre' });
+    describe('PUT /artists/{id}', () => {
+        it('replaces the artist and returns the updated record', async () => {
+            const { status, body } = await request(app)
+                .put(`/artists/${artist.id}`)
+                .send({ name: 'something different', genre: 'different genre' });
 
-      expect(status).to.equal(404);
-      expect(body.message).to.equal('artist 999999999 does not exist');
-    });
-  });
+            expect(status).to.equal(200);
 
-  describe('PATCH /artists/{id}', () => {
-    it('updates the artist and returns the updated record', async () => {
-      const { status, body } = await request(app)
-        .patch(`/artists/${artist.id}`)
-        .send({ name: 'something different', genre: 'rock' });
+            expect(body).to.deep.equal({
+                id: artist.id,
+                name: 'something different',
+                genre: 'different genre',
+            });
+        });
 
-      expect(status).to.equal(200);
+        it('returns a 404 if the artist does not exist', async () => {
+            const { status, body } = await request(app)
+                .put('/artists/999999999')
+                .send({ name: 'something different', genre: 'different genre' });
 
-      expect(body).to.deep.equal({
-        id: artist.id,
-        name: 'something different',
-        genre: 'rock',
-      });
-    });
-
-    it('returns a 404 if the artist does not exist', async () => {
-      const { status, body } = await request(app)
-        .patch('/artists/999999999')
-        .send({ name: 'something different', genre: 'rock' });
-
-      expect(status).to.equal(404);
-      expect(body.message).to.equal('artist 999999999 does not exist');
+            expect(status).to.equal(404);
+            expect(body.message).to.equal('artist 999999999 does not exist');
+        });
     });
 
-    it('updates the artist w/o name and returns the updated record', async () => {
-      const { status, body } = await request(app)
-        .patch(`/artists/${artist.id}`)
-        .send({ genre: 'rock' });
+    describe('PATCH /artists/{id}', () => {
+        it('updates the artist and returns the updated record', async () => {
+            const { status, body } = await request(app)
+                .patch(`/artists/${artist.id}`)
+                .send({ name: 'something different', genre: 'rock' });
 
-      expect(status).to.equal(200);
+            expect(status).to.equal(200);
 
-      expect(body).to.deep.equal({
-        id: artist.id,
-        name: 'Tame Impala',
-        genre: 'rock',
-      });
+            expect(body).to.deep.equal({
+                id: artist.id,
+                name: 'something different',
+                genre: 'rock',
+            });
+        });
+
+        it('returns a 404 if the artist does not exist', async () => {
+            const { status, body } = await request(app)
+                .patch('/artists/999999999')
+                .send({ name: 'something different', genre: 'rock' });
+
+            expect(status).to.equal(404);
+            expect(body.message).to.equal('artist 999999999 does not exist');
+        });
+
+        it('updates the artist w/o name and returns the updated record', async () => {
+            const { status, body } = await request(app)
+                .patch(`/artists/${artist.id}`)
+                .send({ genre: 'rock' });
+
+            expect(status).to.equal(200);
+
+            expect(body).to.deep.equal({
+                id: artist.id,
+                name: 'Tame Impala',
+                genre: 'rock',
+            });
+        });
+
+        it('updates the artist w/o genre and returns the updated record', async () => {
+            const { status, body } = await request(app)
+                .patch(`/artists/${artist.id}`)
+                .send({ name: 'Broken Bells' });
+
+            expect(status).to.equal(200);
+
+            expect(body).to.deep.equal({
+                id: artist.id,
+                name: 'Broken Bells',
+                genre: 'indie',
+            });
+        });
     });
-
-    it('updates the artist w/o genre and returns the updated record', async () => {
-      const { status, body } = await request(app)
-        .patch(`/artists/${artist.id}`)
-        .send({ name: 'Broken Bells' });
-
-      expect(status).to.equal(200);
-
-      expect(body).to.deep.equal({
-        id: artist.id,
-        name: 'Broken Bells',
-        genre: 'indie',
-      });
-    });
-  });
 });
